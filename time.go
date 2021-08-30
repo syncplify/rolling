@@ -103,3 +103,13 @@ func (w *TimePolicy) SemiReduce(f func(Window) []float64) []float64 {
 	w.keepConsistent(adjustedTime, windowOffset)
 	return f(w.window)
 }
+
+// GetWindow adjusts and then returns the raw data window
+func (w *TimePolicy) GetWindow() Window {
+	w.lock.Lock()
+	defer w.lock.Unlock()
+
+	var adjustedTime, windowOffset = w.selectBucket(time.Now())
+	w.keepConsistent(adjustedTime, windowOffset)
+	return w.window
+}

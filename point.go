@@ -53,3 +53,11 @@ func (w *PointPolicy) SemiReduce(f func(Window) []float64) []float64 {
 
 	return f(w.window)
 }
+
+// GetWindow returns the raw data window
+func (w *PointPolicy) GetWindow() Window {
+	w.lock.Lock()
+	defer w.lock.Unlock()
+
+	return w.window
+}
