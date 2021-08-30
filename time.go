@@ -93,3 +93,13 @@ func (w *TimePolicy) Reduce(f func(Window) float64) float64 {
 	w.keepConsistent(adjustedTime, windowOffset)
 	return f(w.window)
 }
+
+// SemiReduce allows for serialization-reduction of the window
+func (w *TimePolicy) SemiReduce(f func(Window) []float64) []float64 {
+	w.lock.Lock()
+	defer w.lock.Unlock()
+
+	var adjustedTime, windowOffset = w.selectBucket(time.Now())
+	w.keepConsistent(adjustedTime, windowOffset)
+	return f(w.window)
+}

@@ -45,3 +45,11 @@ func (w *PointPolicy) Reduce(f func(Window) float64) float64 {
 
 	return f(w.window)
 }
+
+// SemiReduce allows for serialization-reduction of the window
+func (w *PointPolicy) SemiReduce(f func(Window) []float64) []float64 {
+	w.lock.Lock()
+	defer w.lock.Unlock()
+
+	return f(w.window)
+}
